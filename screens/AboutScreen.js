@@ -1,14 +1,15 @@
-import { ScrollView } from "react-native";
-import { Avatar, Card, ListItem, Text } from "react-native-elements";
+import { ScrollView, Text } from "react-native";
+import { Avatar, Card, ListItem } from "react-native-elements";
 import { useSelector } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
+import Loading from "../components/LoadingComponent";
 
-const Mission = () => {
+function Mission() {
   return (
-    <Card style={{ margin: 10 }}>
+    <Card>
       <Card.Title>Our Mission</Card.Title>
       <Card.Divider />
-      <Text>
+      <Text style={{ margin: 10 }}>
         We present a curated database of the best campsites in the vast woods
         and backcountry of the World Wide Web Wilderness. We increase access to
         adventure for the public while promoting safe and respectful use of
@@ -19,13 +20,39 @@ const Mission = () => {
       </Text>
     </Card>
   );
-};
+}
+
 const AboutScreen = () => {
   const partners = useSelector(state => state.partners);
+
+  if (partners.isLoading) {
+    return (
+      <ScrollView>
+        <Mission />
+        <Card>
+          <Card.Title>Community Partners</Card.Title>
+          <Card.Divider />
+          <Loading />
+        </Card>
+      </ScrollView>
+    );
+  }
+  if (partners.errMess) {
+    return (
+      <ScrollView>
+        <Mission />
+        <Card>
+          <Card.Title>Community Partners</Card.Title>
+          <Card.Divider />
+          <Text>{partners.errMess}</Text>
+        </Card>
+      </ScrollView>
+    );
+  }
   return (
     <ScrollView>
       <Mission />
-      <Card style={{ margin: 10 }}>
+      <Card>
         <Card.Title>Community Partners</Card.Title>
         <Card.Divider />
         {partners.partnersArray.map(partner => (
